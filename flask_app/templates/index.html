@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Run Script</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <input type="text" id="inputData" placeholder="Enter input 1">
+    <button onclick="sendInput()">Send Input</button>
+    <div id="output"></div>
+
+    <script type="text/javascript">
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('script_output', function(data) {
+            document.getElementById('output').innerText = data.data;
+        });
+
+        socket.on('request_input', function(data) {
+            document.getElementById('inputData').placeholder = data.data;
+            document.getElementById('inputData').value = '';
+        });
+
+        function sendInput() {
+            var inputData = document.getElementById('inputData').value;
+            socket.emit('send_input', {data: inputData});
+        }
+    </script>
+</body>
+</html>
